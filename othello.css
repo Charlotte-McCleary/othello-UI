@@ -1,0 +1,47 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+h1, p {
+     text-align: center;
+     font-size: 20px;   
+}
+        
+table {
+    margin: 20px auto;
+    border-collapse: collapse;
+}
+        
+td {
+    width: 90px;
+    height: 90px;
+    border: 2px solid black;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background-color: green;
+    position: relative;
+    border-radius: 0;
+}
+        
+td.occupied {
+    cursor: initial;
+}
+        
+td:before {
+    content: "";
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    width: 90%;
+    height: 90%;
+    border-radius: 50%;
+}
+        
+.black::before {
+    background-color: black;
+}
+        
+.white::before {
+    background-color: white;
+}
