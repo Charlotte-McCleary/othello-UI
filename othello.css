@@ -2,6 +2,30 @@ body {
     font-family: Arial, sans-serif;
 }
 
+.navbar {
+  display: flex;
+  justify-content: center;
+}
+
+ 
+
+ 
+
+.navbar li {
+  margin-right: 20px; /* Adjust as needed */
+}
+
+.active {
+	color: white;
+	background-color: black;
+}	
+
+.navbar a {
+  text-decoration: none;
+}
+
+
+
 h1, p {
      text-align: center;
      font-size: 20px;   
