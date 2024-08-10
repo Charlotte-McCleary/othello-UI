@@ -1,3 +1,6 @@
+
+import { best_move } from './engine/othello_engine_api.js';
+
 const boardSize = 8;
 const htmlBoard = document.getElementById('board');
 let board = new Array(boardSize);
@@ -46,8 +49,11 @@ let currentPlayer = 'black';
 document.getElementById("currentplayer").innerHTML = "Black to Go";
 
 function play(cell) {
+    
+    console.log(best_move(board, 1, 0));
+    
     const col = cell.cellIndex;
-    //alert(`cell col = ${col}`);
+    // alert(`cell col = ${col}`);
     const row = cell.parentNode.rowIndex;
     if (cell.innerHTML !== "") {
         return;

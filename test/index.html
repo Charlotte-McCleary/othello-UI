@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="add_api.js" type="module"></script>
+<script type="module">
+
+import { add_test } from './add_api.js';
+
+function pressBtn() {
+    console.log("The result of add_test(2, 2) is:", add_test(2, 2));
+}
+
+window.pressBtn = pressBtn;
+</script>
+</head>
+<body>
+<button onclick="pressBtn()">Click me!</button>
+<p>Open the console to see the result!</p>
+</body>
+</html>
