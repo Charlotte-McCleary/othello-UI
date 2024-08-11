@@ -73,3 +73,18 @@ function play(cell) {
 }
 
     
+	function gameSettingsButtonClick(e) {
+    const dialog = document.querySelector("dialog");
+
+      const closeButton = document.querySelector("dialog button");
+
+      dialog.showModal();
+
+      closeButton.addEventListener("click", () => {
+
+      e.preventDefault();
+
+      dialog.close();
+
+      });
+	}
