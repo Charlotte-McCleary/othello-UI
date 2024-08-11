@@ -1,5 +1,5 @@
 
-import { best_move } from './engine/othello_engine_api.js';
+// import { best_move } from './engine/othello_engine_api.js';
 
 const boardSize = 8;
 const htmlBoard = document.getElementById('board');
@@ -7,6 +7,11 @@ let board = new Array(boardSize);
 for (var i = 0; i<boardSize; i++) {
     board[i] = new Array(boardSize);
 }
+
+function getSquareSize() {
+    return htmlBoard.rows[0].offsetHeight;
+}
+
 const SquareState = {
     EMPTY: 0,
     BLACK: 1,
@@ -23,18 +28,22 @@ for (let i = 0; i < boardSize; i++) {
             cell.click();
         }});
         if ((i === 3 && j === 3) || (i === 4 && j === 4)) {
-            cell.innerHTML=`<svg role="img" height="100" width="100" title="white">
+            let size = getSquareSize();
+            let size90 = Math.floor(size * 0.9);
+            cell.innerHTML=`<svg role="img" height="${size}" width="${size}" title="white">
             <desc>white</desc>
-            <circle cx="50" cy="50" r="45" stroke="white" stroke-width="3" fill="white" />
+            <circle cx="${Math.floor(size/2)}" cy="${Math.floor(size/2)}" r="${Math.floor(size90 / 2)}" stroke="white" stroke-width="3" fill="white" />
             </svg>`;
             cell.style.backgroundColor = 'green';
             board[i][j] = SquareState.WHITE;
 }
             else 
             if ((i === 3 && j === 4) || (i === 4 && j === 3)) {
-                cell.innerHTML=`<svg role="img" height="100" width="100" title="black">
+                let size = getSquareSize();
+                let size90 = Math.floor(size * 0.9);
+                cell.innerHTML=`<svg role="img" height="${size}" width="${size}" title="black">
                 <desc>black</desc>
-                <circle cx="50" cy="50" r="45" stroke="black" stroke-width="3" fill="black" />
+                <circle cx="${Math.floor(size / 2)}" cy="${Math.floor(size / 2)}" r="${Math.floor(size90 / 2)}" stroke="black" stroke-width="3" fill="black" />
                 </svg>`;
                 cell.style.backgroundColor = 'green';
                 board[i][j] = SquareState.BLACK;
@@ -50,18 +59,17 @@ document.getElementById("currentplayer").innerHTML = "Black to Go";
 
 function play(cell) {
     
-    console.log(best_move(board, 1, 0));
-    
     const col = cell.cellIndex;
     // alert(`cell col = ${col}`);
     const row = cell.parentNode.rowIndex;
     if (cell.innerHTML !== "") {
         return;
     }
-    
-    cell.innerHTML=`<svg role="img" height="100" width="100" title="${currentPlayer}">
+    let size = getSquareSize();
+    let size90 = Math.floor(size * 0.9);
+    cell.innerHTML=`<svg role="img" height="${size}" width="${size}" title="${currentPlayer}">
     <desc>${currentPlayer}</desc>
-    <circle cx="50" cy="50" r="45" stroke=${currentPlayer} stroke-width="3" fill=${currentPlayer} />
+<circle cx="${Math.floor(size / 2)}" cy="${Math.floor(size / 2)}" r="${Math.floor(size90 / 2)}" stroke=${currentPlayer} stroke-width="3" fill=${currentPlayer} />
     </svg>`;
     //alert(`cell col = ${col} and row = ${row}`);
     cell.style.backgroundColor = 'green';
