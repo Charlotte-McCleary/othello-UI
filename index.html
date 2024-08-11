@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>The Othello Corner</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<title>The Othello Corner</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="othello.css" type="text/css">
     <script type="text/javascript" src="othello.js" defer></script>
@@ -15,11 +16,23 @@
     <li><a href="othello-settings.html">Settings</a></li>
 	</ul>
 	</nav>
-	<h1>The Othello Corner</h1>
+	<!--<h1>The Othello Corner</h1> -->
+	<button onclick = "gameSettingsButtonClick()" id="game-settings-button" class = "float-left"><span class="fa fa-gear"></span> Game Settings</button>
+    <dialog id="game-settings-dialog" aria-labelledby="dialog-title">
+    <form id="game-settings-form">
+	<div>
+    <button autofocus>close</button>
+    <h2 id="dialog-title">Game Settings</h2>
+	<label for ="difficulty">Choose difficulty</label>
+	<input id = "difficulty" type = "number" name = "difficulty" min = "1" max = "10">
+	</div>
+	</form>	
+	</dialog>
 
     <table id="board"></table>
     
     <p id="currentplayer" role="status" aria-live="assertive"></p>
-
+<br><br><br>
+<p>Test paragraph at the bottom </p>
 </body>
 </html>
