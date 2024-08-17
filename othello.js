@@ -11,19 +11,19 @@ const htmlBoard = document.getElementById('board');
 const board = createBoard();
 setupHtmlBoard();
 
+let squareSize;
 let currentPlayer = 'black';
 document.getElementById('currentplayer').innerHTML = 'Black to Go';
 
 function getSquareSize() {
-    return htmlBoard.rows[0].offsetHeight;
+    return _squareSize;
 }
 
 function diskSvg(color) {
-    let size = getSquareSize();
-    let size90 = Math.floor(size * 0.9);
+    let size = Math.floor(getSquareSize() * 0.95);
     return `<svg role="img" height="${size}" width="${size}" title="${color}">
             <desc>${color}</desc>
-            <circle cx="${Math.floor(size/2)}" cy="${Math.floor(size/2)}" r="${Math.floor(size90 / 2)}" stroke="${color}" stroke-width="1" fill="${color}" />
+            <circle cx="${Math.floor(size/2)}" cy="${Math.floor(size/2)}" r="${Math.floor(size / 2) - 1}" stroke="${color}" stroke-width="1" fill="${color}" />
             </svg>`;
 }
 
@@ -43,6 +43,8 @@ function getCell(row, col) {
 function placeDisk(row, col, color) {
     cell = getCell(row, col);
     cell.innerHTML = diskSvg(color);
+    console.log(cell.innerHTML);
+    console.log('------');
     cell.style.backgroundColor = 'green';
 }
 
@@ -58,6 +60,10 @@ function setupHtmlBoard() {
             cell.onclick = () => play(cell);
         }
     }
+    let _height = htmlBoard.rows[0].cells[0].offsetHeight;
+    let _width = htmlBoard.rows[0].cells[0].offsetWidth;
+    console.log(_height + ", " + _width);
+    _squareSize = _height < _width ? _height : _width;
     placeDisk(3, 3, 'white');
     placeDisk(4, 4, 'white');
     placeDisk(3, 4, 'black');
