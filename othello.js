@@ -103,6 +103,7 @@ function play(cell) {
     cell.innerHTML = diskSvg(currentPlayer);
     cell.style.backgroundColor = 'green';
     board[row][col] = stringToSquareState(currentPlayer);
+    document.getElementById('sr-message').innerHTML = currentPlayer;
     currentPlayer = otherPlayer(currentPlayer);
     document.getElementById('currentplayer').innerHTML = `${currentPlayer} to Go`;
 }
