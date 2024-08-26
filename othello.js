@@ -11,9 +11,23 @@ const htmlBoard = document.getElementById('board');
 const board = createBoard();
 setupHtmlBoard();
 
+const gameHistory = {
+	boardStates = [createBoard()],
+	index: 0
+};
+
+
 let squareSize;
 let currentPlayer = 'black';
 document.getElementById('currentplayer').innerHTML = 'Black to Go';
+
+function copyBoard(board) {
+	return board.map(rank => rank.slice());
+}
+
+function backButtonClicked() {
+	
+}
 
 function getSquareSize() {
     return _squareSize;
@@ -94,6 +108,13 @@ function capitalize(s) {
     return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
+function addToGameHistory(board) {
+	gameHistory.gameStates.slice[0, gameHistory.index + 1]
+	gameHistory.gameStates.push(copyBoard(board))
+	gameHistory.index += 1
+	
+}
+
 function play(cell) {
     const col = cell.cellIndex;
     const row = cell.parentNode.rowIndex;
@@ -106,6 +127,7 @@ function play(cell) {
     document.getElementById('sr-message').innerHTML = currentPlayer;
     currentPlayer = otherPlayer(currentPlayer);
     document.getElementById('currentplayer').innerHTML = `${currentPlayer} to Go`;
+	addToGameHistory(board)
 }
     
 function gameSettingsButtonClick(e) {
@@ -116,4 +138,20 @@ function gameSettingsButtonClick(e) {
         e.preventDefault();
         dialog.close();
     });
+}
+function clearGame(e) {
+	for (let rank = 0; rank < 8; rank ++) {
+		for (let file = 0; file < 8; file ++) {
+			let cell = getCell(rank, file)
+			cell.innerHTML = ''
+			cell.style.backgroundcolor = 'green'
+			board[rank][file] = SquareState.EMPTY 
+		}
+	}
+	placeDisk(3,3,'black') 
+	placeDisk(4,4,'black') 
+	placeDisk(3,4,'white')
+	placeDisk(4,3,'white')
+	currentPlayer = 'black'
+	
 }
