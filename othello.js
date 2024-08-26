@@ -7,18 +7,18 @@ const SquareState = {
     WHITE: 2
 };
 
+let _squareSize;
+let currentPlayer = 'black';
+
 const htmlBoard = document.getElementById('board');
 const board = createBoard();
 setupHtmlBoard();
 
 const gameHistory = {
-	boardStates = [createBoard()],
+	boardStates: [createBoard()],
 	index: 0
 };
 
-
-let squareSize;
-let currentPlayer = 'black';
 document.getElementById('currentplayer').innerHTML = 'Black to Go';
 
 function copyBoard(board) {
@@ -55,7 +55,7 @@ function getCell(row, col) {
 }
 
 function placeDisk(row, col, color) {
-    cell = getCell(row, col);
+    let cell = getCell(row, col);
     cell.innerHTML = diskSvg(color);
     console.log(cell.innerHTML);
     console.log('------');
