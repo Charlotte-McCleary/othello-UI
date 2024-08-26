@@ -1,4 +1,3 @@
-
 import { bestMove } from './engine/othello_engine_api.js';
 
 const SquareState = {
@@ -22,13 +21,50 @@ const gameHistory = {
 document.getElementById('currentplayer').innerHTML = 'Black to Go';
 
 function copyBoard(board) {
+	console.log('testing copyBoard()')
+	console.log(board)
 	return board.map(rank => rank.slice());
 }
 
+
+function forwardButtonClicked() {
+	if(gameHistory.index >= gameHistory.gameStates.length) {
+		return;
+	}
+	gameHistory.index += 1;
+	renderBoard(gameHistory.gameStates[gameHistory.index])
+	board = copyBoard(gameHistory.gameStates[gameHistory.index]);
+}
 function backButtonClicked() {
-	
+	if(gameHistory.index == 0) {
+		return; 
+	}
+	else {
+		gameHistory.index -= 1;
+		renderBoard(gameHistory.gameStates[gameHistory.index]);
+		
+	}
+	console.log('board: ' + gameHistory.gameStates[gameHistory.index]);
+	board = copyBoard(gameHistory.gameStates[gameHistory.index]);
 }
 
+function renderBoard(board) {
+	for(let rank = 0; rank < 8; rank ++) {
+		for(let file = 0; file < 8; file ++) {
+			let cell = getCell(rank, file);
+			if(board[rank][file] === squareState.BLACK){
+				cell.innerHTML = diskSvg('black');
+			}
+			else if(board[rank][file] === squareState.WHITE){
+				cell.innerHTML = diskSvg('white');
+			}
+			else {
+				cell.innerHTML = '';
+			}
+			cell.style.backgroundColor = 'green';
+		}
+	}
+}
 function getSquareSize() {
     return _squareSize;
 }
