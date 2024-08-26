@@ -1,5 +1,5 @@
 
-// import { best_move } from './engine/othello_engine_api.js';
+import { bestMove } from './engine/othello_engine_api.js';
 
 const SquareState = {
     EMPTY: 0,

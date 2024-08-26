@@ -32,9 +32,9 @@ Module['ready'] = new Promise(function(resolve, reject) {
   readyPromiseReject = reject;
 });
 
-      if (!Object.getOwnPropertyDescriptor(Module['ready'], '_oth_best_move')) {
-        Object.defineProperty(Module['ready'], '_oth_best_move', { configurable: true, get: function() { abort('You are getting _oth_best_move on the Promise object, instead of the instance. Use .then() to get called back with the instance, see the MODULARIZE docs in src/settings.js') } });
-        Object.defineProperty(Module['ready'], '_oth_best_move', { configurable: true, set: function() { abort('You are setting _oth_best_move on the Promise object, instead of the instance. Use .then() to get called back with the instance, see the MODULARIZE docs in src/settings.js') } });
+      if (!Object.getOwnPropertyDescriptor(Module['ready'], '_best_move_pack32')) {
+        Object.defineProperty(Module['ready'], '_best_move_pack32', { configurable: true, get: function() { abort('You are getting _best_move_pack32 on the Promise object, instead of the instance. Use .then() to get called back with the instance, see the MODULARIZE docs in src/settings.js') } });
+        Object.defineProperty(Module['ready'], '_best_move_pack32', { configurable: true, set: function() { abort('You are setting _best_move_pack32 on the Promise object, instead of the instance. Use .then() to get called back with the instance, see the MODULARIZE docs in src/settings.js') } });
       }
     
 
@@ -1886,17 +1886,59 @@ var ASM_CONSTS = {
       return demangleAll(js);
     }
 
-  function _emscripten_get_heap_max() {
-      return HEAPU8.length;
+  function _emscripten_memcpy_big(dest, src, num) {
+      HEAPU8.copyWithin(dest, src, src + num);
+    }
+
+  function flush_NO_FILESYSTEM() {
+      // flush anything remaining in the buffers during shutdown
+      ___stdio_exit();
+      var buffers = SYSCALLS.buffers;
+      if (buffers[1].length) SYSCALLS.printChar(1, 10);
+      if (buffers[2].length) SYSCALLS.printChar(2, 10);
     }
   
-  function abortOnCannotGrowMemory(requestedSize) {
-      abort('Cannot enlarge memory arrays to size ' + requestedSize + ' bytes (OOM). Either (1) compile with  -s INITIAL_MEMORY=X  with X higher than the current value ' + HEAP8.length + ', (2) compile with  -s ALLOW_MEMORY_GROWTH=1  which allows increasing the size at runtime, or (3) if you want malloc to return NULL (0) instead of this abort, compile with  -s ABORTING_MALLOC=0 ');
+  var SYSCALLS = {buffers:[null,[],[]],printChar:function(stream, curr) {
+        var buffer = SYSCALLS.buffers[stream];
+        assert(buffer);
+        if (curr === 0 || curr === 10) {
+          (stream === 1 ? out : err)(UTF8ArrayToString(buffer, 0));
+          buffer.length = 0;
+        } else {
+          buffer.push(curr);
+        }
+      },varargs:undefined,get:function() {
+        assert(SYSCALLS.varargs != undefined);
+        SYSCALLS.varargs += 4;
+        var ret = HEAP32[(((SYSCALLS.varargs)-(4))>>2)];
+        return ret;
+      },getStr:function(ptr) {
+        var ret = UTF8ToString(ptr);
+        return ret;
+      },get64:function(low, high) {
+        if (low >= 0) assert(high === 0);
+        else assert(high === -1);
+        return low;
+      }};
+  function _fd_write(fd, iov, iovcnt, pnum) {
+      ;
+      // hack to support printf in SYSCALLS_REQUIRE_FILESYSTEM=0
+      var num = 0;
+      for (var i = 0; i < iovcnt; i++) {
+        var ptr = HEAP32[((iov)>>2)];
+        var len = HEAP32[(((iov)+(4))>>2)];
+        iov += 8;
+        for (var j = 0; j < len; j++) {
+          SYSCALLS.printChar(fd, HEAPU8[ptr+j]);
+        }
+        num += len;
+      }
+      HEAP32[((pnum)>>2)] = num;
+      return 0;
     }
-  function _emscripten_resize_heap(requestedSize) {
-      var oldSize = HEAPU8.length;
-      requestedSize = requestedSize >>> 0;
-      abortOnCannotGrowMemory(requestedSize);
+
+  function _setTempRet0(val) {
+      setTempRet0(val);
     }
 var ASSERTIONS = true;
 
@@ -1928,14 +1970,16 @@ function intArrayToString(array) {
 
 
 var asmLibraryArg = {
-  "emscripten_resize_heap": _emscripten_resize_heap
+  "emscripten_memcpy_big": _emscripten_memcpy_big,
+  "fd_write": _fd_write,
+  "setTempRet0": _setTempRet0
 };
 var asm = createWasm();
 /** @type {function(...*):?} */
 var ___wasm_call_ctors = Module["___wasm_call_ctors"] = createExportWrapper("__wasm_call_ctors");
 
 /** @type {function(...*):?} */
-var _oth_best_move = Module["_oth_best_move"] = createExportWrapper("oth_best_move");
+var _best_move_pack32 = Module["_best_move_pack32"] = createExportWrapper("best_move_pack32");
 
 /** @type {function(...*):?} */
 var ___errno_location = Module["___errno_location"] = createExportWrapper("__errno_location");
@@ -1971,6 +2015,9 @@ var stackRestore = Module["stackRestore"] = createExportWrapper("stackRestore");
 
 /** @type {function(...*):?} */
 var stackAlloc = Module["stackAlloc"] = createExportWrapper("stackAlloc");
+
+/** @type {function(...*):?} */
+var dynCall_jiji = Module["dynCall_jiji"] = createExportWrapper("dynCall_jiji");
 
 
 
@@ -2312,7 +2359,7 @@ function checkUnflushedContent() {
     has = true;
   }
   try { // it doesn't matter if it fails
-    var flush = null;
+    var flush = flush_NO_FILESYSTEM;
     if (flush) flush();
   } catch(e) {}
   out = oldOut;
