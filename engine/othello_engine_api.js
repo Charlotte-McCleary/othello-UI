@@ -37,7 +37,7 @@ export function bestMove(board, currentPlayer, depth) {
     for (let rank = 4; rank < 8; rank++) {
         for (let file = 0; file < 8; file++) {
             const [wMask, bMask] = getMasks(rank, file);
-            whiteMigh |= wMask;
+            whiteHigh |= wMask;
             blackHigh |= bMask;
         }
     }
@@ -52,6 +52,76 @@ export function bestMove(board, currentPlayer, depth) {
     return [resultRank, resultFile];
 }
 
+
 function inBounds(rank, file) {
     return (0 <= rank && rank < 8 && 0 <= file && file < 8);
+}
+
+function oppositeColor(color) {
+    if (color == "B") {
+        return "W";
+    } else {
+        return "B";
+    }
+}
+
+function isValidDirection(board, currentPlayer, rank, file, rankDelta, fileDelta) {
+    if (!inBounds(rank, file) ||
+        !inBounds(rank + rankDelta, file + fileDelta)) {
+        return false;
+    }
+    if (board[rank + rankDelta][file + fileDelta] != oppositeColor(currentPlayer)) {
+        return false;
+    }
+    rank += rankDelta;
+    file += fileDelta;
+    while (inBounds(rank, file) &&
+            board[rank][file] == oppositeColor(currentPlayer)) {
+        rank += rankDelta;
+        file += fileDelta;
+    }
+    if (inBounds(rank, file) &&
+            board[rank][file] == currentColor(currentPlayer)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+export function isValidMove(board, currentPlayer, rank, file) {
+    for (let i = -1; i <= 1; i++) {
+        for (let j = -1; j <= 1; j++) {
+            if (!(i == 0 && j == 0) && isValidDirection(board, currentPlayer, rank, file, i, j)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+export function makeMove(board, currentPlayer, rank, file) {
+    for (let i = -1; i <= 1; i++) {
+        for (let j = -1; j <= 1; j++) {
+            if (!(i == 0 && j == 0)) {
+                flipDirection(board, currentPlayer, rank, file, i, j);
+            }
+        }
+    }
+    board[rank][file] = current_color(currentPlayer);
+    return board;
+}
+
+function flipDirection(board, currentPlayer, rank, file, rankDelta, fileDelta) {
+    if (!isValidDirection(board, currentPlayer, rank, file, rankDelta, fileDelta)) {
+        return false;
+    }
+    rank += rankDelta;
+    file += fileDelta;
+    while (inBounds(rank, file) &&
+           board[rank][file] == oppositeColor(currentPlayer)) {
+        board[rank][file] = currentColor(currentPlayer);
+        rank += rankDelta;
+        file += fileDelta;
+    }
+    return true;
 }
