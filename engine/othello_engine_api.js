@@ -16,8 +16,7 @@ export function bestMove(board, currentPlayer, depth) {
     let whiteHigh = 0, whiteLow = 0, blackHigh = 0, blackLow = 0;
     
     const getMasks = (rank, file) => {
-        rank %= 4;
-        const shift = 8 * rank + file;
+        const shift = 8 * (rank % 4) + file;
         if (board[rank][file] === SquareState.WHITE) {
             return [1 << shift, 0];
         } else if (board[rank][file] === SquareState.BLACK) {
@@ -49,6 +48,7 @@ export function bestMove(board, currentPlayer, depth) {
     }
     const resultRank = Math.floor(move / 8);
     const resultFile = move % 8;
+    console.log(move, resultRank, resultFile);
     return [resultRank, resultFile];
 }
 

@@ -36,10 +36,17 @@ forwardButton.addEventListener("click", function(e) {
     currentPlayer = otherPlayer(currentPlayer);
 });
 
+const engineMoveButton = document.getElementById("engine-move-button");
+
+engineMoveButton.addEventListener("click", function(e) {
+    const [rank, file] = bestMove(board, currentPlayer, 6);
+    console.log(rank, file);
+    cellClicked(getCell(rank, file));
+});
+
 const backButton = document.getElementById("back-button");
 
 backButton.addEventListener("click", function(e) {
-    console.log(board);
 	if(gameHistory.index <= 0) {
 		return; 
 	}
@@ -153,8 +160,6 @@ function addToGameHistory(board) {
 function cellClicked(cell) {
     const rank = cell.parentNode.rowIndex;
     const file = cell.cellIndex;
-    console.log(board);
-    console.log(rank, file);
     if (!isValidMove(board, currentPlayer, rank, file)) {
         return;
     }
