@@ -33,6 +33,7 @@ forwardButton.addEventListener("click", function(e) {
 	gameHistory.index += 1;
 	renderBoard(gameHistory.gameStates[gameHistory.index]);
 	board = copyBoard(gameHistory.gameStates[gameHistory.index]);
+    currentPlayer = otherPlayer(currentPlayer);
 });
 
 const backButton = document.getElementById("back-button");
@@ -46,6 +47,7 @@ backButton.addEventListener("click", function(e) {
 		gameHistory.index -= 1;
 		renderBoard(gameHistory.gameStates[gameHistory.index]);
         board = copyBoard(gameHistory.gameStates[gameHistory.index]);
+        currentPlayer = otherPlayer(currentPlayer);
 	}
 });
 
