@@ -1,5 +1,7 @@
 import { bestMove } from './engine/othello_engine_api.js';
 
+console.log('TestingTestingTesting');
+
 const SquareState = {
     EMPTY: 0,
     BLACK: 1,
@@ -10,32 +12,38 @@ let _squareSize;
 let currentPlayer = 'black';
 
 const htmlBoard = document.getElementById('board');
-const board = createBoard();
+let board = createBoard();
 setupHtmlBoard();
 
 const gameHistory = {
-	boardStates: [createBoard()],
+	gameStates: [createBoard()],
 	index: 0
 };
 
 document.getElementById('currentplayer').innerHTML = 'Black to Go';
 
 function copyBoard(board) {
-	console.log('testing copyBoard()')
-	console.log(board)
+    console.log(typeof(board));
+    if (!board || !board[0]) {
+        console.log(board);
+    }
 	return board.map(rank => rank.slice());
 }
 
+const forwardButton = document.getElementById("forward-button");
 
-function forwardButtonClicked() {
+forwardButton.addEventListener("click", function(e) {
 	if(gameHistory.index >= gameHistory.gameStates.length) {
 		return;
 	}
 	gameHistory.index += 1;
 	renderBoard(gameHistory.gameStates[gameHistory.index])
 	board = copyBoard(gameHistory.gameStates[gameHistory.index]);
-}
-function backButtonClicked() {
+});
+
+const backButton = document.getElementById("back-button");
+
+backButton.addEventListener("click", function(e) {
 	if(gameHistory.index == 0) {
 		return; 
 	}
@@ -44,18 +52,17 @@ function backButtonClicked() {
 		renderBoard(gameHistory.gameStates[gameHistory.index]);
 		
 	}
-	console.log('board: ' + gameHistory.gameStates[gameHistory.index]);
 	board = copyBoard(gameHistory.gameStates[gameHistory.index]);
-}
+});
 
 function renderBoard(board) {
 	for(let rank = 0; rank < 8; rank ++) {
 		for(let file = 0; file < 8; file ++) {
 			let cell = getCell(rank, file);
-			if(board[rank][file] === squareState.BLACK){
+			if(board[rank][file] === SquareState.BLACK){
 				cell.innerHTML = diskSvg('black');
 			}
-			else if(board[rank][file] === squareState.WHITE){
+			else if(board[rank][file] === SquareState.WHITE){
 				cell.innerHTML = diskSvg('white');
 			}
 			else {
@@ -80,7 +87,6 @@ function diskSvg(color) {
 function createBoard() {
     let result = Array.from({length: 8},
         () => Array.from({length: 8}, () => SquareState.EMPTY));
-    console.log(result);
     result[3][3] = result[4][4] = SquareState.WHITE;
     result[3][4] = result[4][3] = SquareState.BLACK;
     return result;
@@ -93,8 +99,6 @@ function getCell(row, col) {
 function placeDisk(row, col, color) {
     let cell = getCell(row, col);
     cell.innerHTML = diskSvg(color);
-    console.log(cell.innerHTML);
-    console.log('------');
     cell.style.backgroundColor = 'green';
 }
 
@@ -112,7 +116,6 @@ function setupHtmlBoard() {
     }
     let _height = htmlBoard.rows[0].cells[0].offsetHeight;
     let _width = htmlBoard.rows[0].cells[0].offsetWidth;
-    console.log(_height + ", " + _width);
     _squareSize = _height < _width ? _height : _width;
     placeDisk(3, 3, 'white');
     placeDisk(4, 4, 'white');
@@ -145,10 +148,9 @@ function capitalize(s) {
 }
 
 function addToGameHistory(board) {
-	gameHistory.gameStates.slice[0, gameHistory.index + 1]
-	gameHistory.gameStates.push(copyBoard(board))
-	gameHistory.index += 1
-	
+	gameHistory.gameStates = gameHistory.gameStates.slice(0, gameHistory.index + 1);
+	gameHistory.gameStates.push(copyBoard(board));
+	gameHistory.index += 1;
 }
 
 function play(cell) {
@@ -191,6 +193,3 @@ function clearGame(e) {
 	currentPlayer = 'black'
 	
 }
-
-window.boardArr = board;
-window.bestMove = bestMove;
