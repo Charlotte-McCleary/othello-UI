@@ -155,3 +155,6 @@ function clearGame(e) {
 	currentPlayer = 'black'
 	
 }
+
+window.boardArr = board;
+window.bestMove = bestMove;
