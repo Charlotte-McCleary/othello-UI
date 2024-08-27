@@ -39,7 +39,7 @@ forwardButton.addEventListener("click", function(e) {
 const engineMoveButton = document.getElementById("engine-move-button");
 
 engineMoveButton.addEventListener("click", function(e) {
-    const [rank, file] = bestMove(board, currentPlayer, 6);
+    const [rank, file] = bestMove(board, currentPlayer, 10);
     console.log(rank, file);
     cellClicked(getCell(rank, file));
 });
