@@ -18,9 +18,9 @@ export function bestMove(board, currentPlayer, depth) {
     const getMasks = (rank, file) => {
         rank %= 4;
         const shift = 8 * rank + file;
-        if (board[rank][file] == SquareState.WHITE) {
+        if (board[rank][file] === SquareState.WHITE) {
             return [1 << shift, 0];
-        } else if (board[rank][file] == SquareState.BLACK) {
+        } else if (board[rank][file] === SquareState.BLACK) {
             return [0, 1 << shift];
         } else {
             return [0, 0];
@@ -42,7 +42,7 @@ export function bestMove(board, currentPlayer, depth) {
         }
     }
     let move;
-    if (currentPlayer == "black") {
+    if (currentPlayer === "black") {
         move = engineBestMove(whiteHigh, whiteLow, blackHigh, blackLow, depth);
     } else {
         move = engineBestMove(blackHigh, blackLow, whiteHigh, whiteLow, depth);
@@ -57,11 +57,23 @@ function inBounds(rank, file) {
     return (0 <= rank && rank < 8 && 0 <= file && file < 8);
 }
 
-function oppositeColor(color) {
-    if (color == "B") {
-        return "W";
+function oppositeColor(player) {
+    if (player === "black") {
+        return SquareState.WHITE;
+    } else if (player === "white") {
+        return SquareState.BLACK;
     } else {
-        return "B";
+        throw new Error("Invalid player string.");
+    }
+}
+
+function currentColor(player) {
+    if (player === "black") {
+        return SquareState.BLACK;
+    } else if (player === "white") {
+        return SquareState.WHITE;
+    } else {
+        throw new Error("Invalid player string.");
     }
 }
 
@@ -76,12 +88,12 @@ function isValidDirection(board, currentPlayer, rank, file, rankDelta, fileDelta
     rank += rankDelta;
     file += fileDelta;
     while (inBounds(rank, file) &&
-            board[rank][file] == oppositeColor(currentPlayer)) {
+            board[rank][file] === oppositeColor(currentPlayer)) {
         rank += rankDelta;
         file += fileDelta;
     }
     if (inBounds(rank, file) &&
-            board[rank][file] == currentColor(currentPlayer)) {
+            board[rank][file] === currentColor(currentPlayer)) {
         return true;
     } else {
         return false;
@@ -91,7 +103,7 @@ function isValidDirection(board, currentPlayer, rank, file, rankDelta, fileDelta
 export function isValidMove(board, currentPlayer, rank, file) {
     for (let i = -1; i <= 1; i++) {
         for (let j = -1; j <= 1; j++) {
-            if (!(i == 0 && j == 0) && isValidDirection(board, currentPlayer, rank, file, i, j)) {
+            if (!(i === 0 && j === 0) && isValidDirection(board, currentPlayer, rank, file, i, j)) {
                 return true;
             }
         }
@@ -107,7 +119,7 @@ export function makeMove(board, currentPlayer, rank, file) {
             }
         }
     }
-    board[rank][file] = current_color(currentPlayer);
+    board[rank][file] = currentColor(currentPlayer);
     return board;
 }
 

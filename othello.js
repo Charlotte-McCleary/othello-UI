@@ -1,6 +1,4 @@
-import { bestMove } from './engine/othello_engine_api.js';
-
-console.log('TestingTestingTesting');
+import { bestMove, isValidMove, makeMove } from './engine/othello_engine_api.js';
 
 const SquareState = {
     EMPTY: 0,
@@ -108,7 +106,7 @@ function setupHtmlBoard() {
                 if (e.key === 'Enter' || e.key === 'Spacebar') {
                     cell.click();
                 }});
-            cell.onclick = () => play(cell);
+            cell.onclick = () => cellClicked(cell);
         }
     }
     let _height = htmlBoard.rows[0].cells[0].offsetHeight;
@@ -150,19 +148,19 @@ function addToGameHistory(board) {
 	gameHistory.index += 1;
 }
 
-function play(cell) {
-    console.log(currentPlayer);
-    const col = cell.cellIndex;
-    const row = cell.parentNode.rowIndex;
-    if (board[row][col] !== SquareState.EMPTY) {
+function cellClicked(cell) {
+    const rank = cell.parentNode.rowIndex;
+    const file = cell.cellIndex;
+    console.log(board);
+    console.log(rank, file);
+    if (!isValidMove(board, currentPlayer, rank, file)) {
         return;
     }
-    cell.innerHTML = diskSvg(currentPlayer);
-    cell.style.backgroundColor = 'green';
-    board[row][col] = stringToSquareState(currentPlayer);
+    makeMove(board, currentPlayer, rank, file);
     document.getElementById('sr-message').innerHTML = currentPlayer;
     currentPlayer = otherPlayer(currentPlayer);
     document.getElementById('currentplayer').innerHTML = `${currentPlayer} to Go`;
+    renderBoard(board);
 	addToGameHistory(board);
 }
     
