@@ -23,36 +23,32 @@ const gameHistory = {
 document.getElementById('currentplayer').innerHTML = 'Black to Go';
 
 function copyBoard(board) {
-    console.log(typeof(board));
-    if (!board || !board[0]) {
-        console.log(board);
-    }
 	return board.map(rank => rank.slice());
 }
 
 const forwardButton = document.getElementById("forward-button");
 
 forwardButton.addEventListener("click", function(e) {
-	if(gameHistory.index >= gameHistory.gameStates.length) {
+	if(gameHistory.index >= gameHistory.gameStates.length - 1) {
 		return;
 	}
 	gameHistory.index += 1;
-	renderBoard(gameHistory.gameStates[gameHistory.index])
+	renderBoard(gameHistory.gameStates[gameHistory.index]);
 	board = copyBoard(gameHistory.gameStates[gameHistory.index]);
 });
 
 const backButton = document.getElementById("back-button");
 
 backButton.addEventListener("click", function(e) {
-	if(gameHistory.index == 0) {
+    console.log(board);
+	if(gameHistory.index <= 0) {
 		return; 
 	}
 	else {
 		gameHistory.index -= 1;
 		renderBoard(gameHistory.gameStates[gameHistory.index]);
-		
+        board = copyBoard(gameHistory.gameStates[gameHistory.index]);
 	}
-	board = copyBoard(gameHistory.gameStates[gameHistory.index]);
 });
 
 function renderBoard(board) {
@@ -72,6 +68,7 @@ function renderBoard(board) {
 		}
 	}
 }
+
 function getSquareSize() {
     return _squareSize;
 }
@@ -137,7 +134,7 @@ function stringToSquareState(player) {
     if (player === 'black') {
         return SquareState.BLACK;
     } else if (player === 'white') {
-        return SquareState.BLACK;
+        return SquareState.WHITE;
     } else {
         throw new Error(`Invalid argument ${player}, expected 'black' or 'white'.`);
     }
@@ -154,6 +151,7 @@ function addToGameHistory(board) {
 }
 
 function play(cell) {
+    console.log(currentPlayer);
     const col = cell.cellIndex;
     const row = cell.parentNode.rowIndex;
     if (board[row][col] !== SquareState.EMPTY) {
@@ -165,7 +163,7 @@ function play(cell) {
     document.getElementById('sr-message').innerHTML = currentPlayer;
     currentPlayer = otherPlayer(currentPlayer);
     document.getElementById('currentplayer').innerHTML = `${currentPlayer} to Go`;
-	addToGameHistory(board)
+	addToGameHistory(board);
 }
     
 function gameSettingsButtonClick(e) {
